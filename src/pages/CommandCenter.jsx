@@ -99,18 +99,27 @@ export const CommandCenter = () => {
   useEffect(() => {
     fetchDashboardData();
 
+    const handleSync = () => fetchDashboardData();
+    window.addEventListener('smartcampus_sync', handleSync);
+    window.addEventListener('storage', handleSync);
+
     if (socket) {
       socket.on('incident:new', (newInc) => {
         setRecentIncidents(prev => [newInc, ...prev.slice(0, 5)]);
         fetchDashboardData();
       });
-      socket.on('incident:updated', () => fetchDashboardData());
-      socket.on('incident:priorityUpdated', () => fetchDashboardData());
-      socket.on('incident:statusUpdated', () => fetchDashboardData());
+      socket.on('incident:updated', handleSync);
+      socket.on('incident:priorityUpdated', handleSync);
+      socket.on('incident:statusUpdated', handleSync);
       socket.on('activity:new', (act) => {
         setLiveActivities(prev => [act, ...prev.slice(0, 4)]);
       });
     }
+
+    return () => {
+      window.removeEventListener('smartcampus_sync', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [socket]);
 
   return (

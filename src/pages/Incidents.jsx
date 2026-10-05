@@ -101,13 +101,22 @@ export const Incidents = () => {
 
   // Real-time updates
   useEffect(() => {
+    const handleSync = () => fetchIncidents();
+    window.addEventListener('smartcampus_sync', handleSync);
+    window.addEventListener('storage', handleSync);
+
     if (socket) {
-      socket.on('incident:new', () => fetchIncidents());
-      socket.on('incident:updated', () => fetchIncidents());
-      socket.on('incident:priorityUpdated', () => fetchIncidents());
-      socket.on('incident:statusUpdated', () => fetchIncidents());
-      socket.on('incident:deleted', () => fetchIncidents());
+      socket.on('incident:new', handleSync);
+      socket.on('incident:updated', handleSync);
+      socket.on('incident:priorityUpdated', handleSync);
+      socket.on('incident:statusUpdated', handleSync);
+      socket.on('incident:deleted', handleSync);
     }
+
+    return () => {
+      window.removeEventListener('smartcampus_sync', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [socket]);
 
   const handleQuickResolve = async (id, currentStatus, e) => {

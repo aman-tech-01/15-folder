@@ -41,14 +41,13 @@ export const Sidebar = () => {
       items: [
         { name: 'Analytics', path: '/analytics', icon: BarChart3 },
         { name: 'Communications', path: '/communications', icon: MessageSquare },
+        { name: 'Staff Task Portal', path: '/staff-dashboard', icon: UserCheck },
         ...(isAdmin
           ? [
               { name: 'Global Settings', path: '/settings', icon: Settings },
               { name: 'Audit Logs', path: '/audit-logs', icon: FileText }
             ]
-          : [
-              { name: 'My Staff Portal', path: '/staff-dashboard', icon: UserCheck }
-            ])
+          : [])
       ]
     }
   ];

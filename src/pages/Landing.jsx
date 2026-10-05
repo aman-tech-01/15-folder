@@ -998,7 +998,10 @@ export const Landing = () => {
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
         onIncidentCreated={(newInc) => {
-          alert(`Problem reported successfully! Generated Tracking ID: ${newInc.incidentId}. The command center and maintenance staff have been dispatched.`);
+          setGeneratedTicket(newInc);
+          setContactSubmitted(true);
+          const el = document.getElementById('contact');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
         }}
       />
     </div>

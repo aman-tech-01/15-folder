@@ -31,6 +31,15 @@ export const AuditLogs = () => {
 
   useEffect(() => {
     fetchLogs();
+
+    const handleSync = () => fetchLogs();
+    window.addEventListener('smartcampus_sync', handleSync);
+    window.addEventListener('storage', handleSync);
+
+    return () => {
+      window.removeEventListener('smartcampus_sync', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, []);
 
   const filteredLogs = logs.filter(l =>

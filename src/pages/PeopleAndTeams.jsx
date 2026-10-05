@@ -70,11 +70,20 @@ export const PeopleAndTeams = () => {
   useEffect(() => {
     fetchData();
 
+    const handleSync = () => fetchData();
+    window.addEventListener('smartcampus_sync', handleSync);
+    window.addEventListener('storage', handleSync);
+
     if (socket) {
-      socket.on('user:updated', () => fetchData());
-      socket.on('user:created', () => fetchData());
-      socket.on('user:deleted', () => fetchData());
+      socket.on('user:updated', handleSync);
+      socket.on('user:created', handleSync);
+      socket.on('user:deleted', handleSync);
     }
+
+    return () => {
+      window.removeEventListener('smartcampus_sync', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [socket]);
 
   const handleOpenAdd = () => {

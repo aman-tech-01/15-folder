@@ -54,11 +54,21 @@ export const CampusMap = () => {
 
   useEffect(() => {
     fetchMapData();
+
+    const handleSync = () => fetchMapData();
+    window.addEventListener('smartcampus_sync', handleSync);
+    window.addEventListener('storage', handleSync);
+
     if (socket) {
-      socket.on('incident:new', () => fetchMapData());
-      socket.on('incident:statusUpdated', () => fetchMapData());
-      socket.on('sensor:update', () => fetchMapData());
+      socket.on('incident:new', handleSync);
+      socket.on('incident:statusUpdated', handleSync);
+      socket.on('sensor:update', handleSync);
     }
+
+    return () => {
+      window.removeEventListener('smartcampus_sync', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [socket]);
 
   const handleSelectLocation = async (loc) => {

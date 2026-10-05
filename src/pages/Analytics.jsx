@@ -73,6 +73,15 @@ export const Analytics = () => {
 
   useEffect(() => {
     fetchAnalytics();
+
+    const handleSync = () => fetchAnalytics();
+    window.addEventListener('smartcampus_sync', handleSync);
+    window.addEventListener('storage', handleSync);
+
+    return () => {
+      window.removeEventListener('smartcampus_sync', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [trendDays]);
 
   return (
